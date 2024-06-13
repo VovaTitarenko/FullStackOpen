@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Display from "./CounterDisplay.js";
-import Button from "../src/components/Button.jsx";
+import Display from "./CounterDisplay.jsx";
+import Button from "../../frontend-notesApp/src/components/Button.jsx";
 
 const App = () => {
   const [counter, setCounter] = useState(0);

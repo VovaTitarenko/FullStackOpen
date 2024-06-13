@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../src/components/Button.jsx";
+import Button from "../../frontend-notesApp/src/components/Button.jsx";
 import Anec from "./AnecdotesComponent.jsx";
 
 const App = () => {
