@@ -1,0 +1,10 @@
+GET http://localhost:3001/api/persons
+###
+POST http://localhost:3002/api/persons HTTP/1.1
+Content-Type: application/json
+
+{"name": "Mihalych", "number": "8-900-555-35-35"}
+###
+DELETE http://localhost:3002/api/persons/1946
+###
+GET https://3-phonebook-backend.fly.dev/info
