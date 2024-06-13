@@ -2,9 +2,9 @@ const config = require("./utils/config.js");
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const notesRouter = require("./controllers/notes");
-const middleware = require("./utils/middleware");
-const logger = require("./utils/logger");
+const notesRouter = require("./controllers/notes.js");
+const middleware = require("./utils/middleware.js");
+const logger = require("./utils/logger.js");
 // const Note = require("./models/note.js");
 const mongoose = require("mongoose");
 
