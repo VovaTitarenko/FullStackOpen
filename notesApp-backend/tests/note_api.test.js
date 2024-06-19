@@ -9,15 +9,27 @@ const app = require("../app");
 const api = supertest(app);
 
 beforeEach(async () => {
+  //   await Note.deleteMany({});
+  //   console.log("cleared");
+
+  //   const noteObjects = helper.initialNotes.map((note) => new Note(note));
+  //   const promiseArray = noteObjects.map((note) => note.save());
+  //   const results = await Promise.all(promiseArray);
+  //   console.log("done");
+
+  // Option 2:
   await Note.deleteMany({});
-  console.log("DB cleared");
-  let noteObject = new Note(helper.initialNotes[0]);
-  await noteObject.save();
-  noteObject = new Note(helper.initialNotes[1]);
-  await noteObject.save();
+  console.log("cleared");
+  for (let note of helper.initialNotes) {
+    let noteObject = new Note(note);
+    await noteObject.save();
+    console.log("saved");
+  }
+  console.log("done");
 });
 
 test("notes are returned as json", async () => {
+  console.log("entered test");
   await api
     .get("/api/notes")
     .expect(200)
