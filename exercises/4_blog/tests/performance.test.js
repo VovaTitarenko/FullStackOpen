@@ -10,17 +10,10 @@ const api = supertest(app);
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  console.log('cleared');
-  for (let blog of listHelper.initialBlogList) {
-    let blogObject = new Blog(blog);
-    await blogObject.save();
-    console.log('saved');
-  }
-  console.log('done');
+  await Blog.insertMany(listHelper.initialBlogList);
 });
 
 test('blogs are returned as json', async () => {
-  console.log('entered test');
   await api
     .get('/api/blogs')
     .expect(200)
@@ -98,6 +91,26 @@ test('posts with missing url receive 400 Bad Request status', async () => {
   };
 
   await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
+test('delete a specific blog', async () => {
+  const blogsAtStart = await Blog.find({});
+  const blogToDelete = blogsAtStart[0];
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  const blogsAtEnd = await Blog.find({});
+  assert.strictEqual(blogsAtEnd.length, listHelper.initialBlogList.length - 1);
+
+  const titles = blogsAtEnd.map((r) => r.title);
+  assert(!titles.includes(blogToDelete.title));
+});
+
+test('update blog', async () => {
+  const blogsAtStart = (await Blog.find({})).map((b) => b.toJSON());
+  const blogToUpdate = blogsAtStart[0];
+  blogToUpdate.likes = 1000;
+  await api.put(`/api/blogs/${blogToUpdate.id}`).send(blogToUpdate).expect(200);
+  const blogToTest = await Blog.findById(blogToUpdate.id);
+  assert.strictEqual(blogToTest.likes, 1000);
 });
 
 after(async () => {
