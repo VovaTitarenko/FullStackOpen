@@ -1,3 +1,18 @@
+const initialBlogList = [
+  {
+    title: 'The story of React',
+    author: 'uidotdev',
+    url: 'https://youtu.be/Wm_xI7KntDs?si=R3tIjDPQixzwZuwx',
+    likes: 20,
+  },
+  {
+    title: 'The story of NextJS',
+    author: 'uidotdev',
+    url: 'https://youtu.be/BILxV_vrZO0?si=qqruENFgNWtnhCp3',
+    likes: 30,
+  },
+];
+
 const dummy = (blogs) => {
   return 1;
 };
@@ -74,6 +89,7 @@ const mostLikes = (blogs) => {
 };
 
 module.exports = {
+  initialBlogList,
   dummy,
   totalLikes,
   favoriteBlog,
