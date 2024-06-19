@@ -5,6 +5,7 @@ const cors = require('cors');
 const logger = require('./utils/logger');
 const mongoose = require('mongoose');
 const Blog = require('./models/blog');
+// const { errorHandler } = require('./utils/middleware');
 
 const mongoUrl = config.MONGODB_URI;
 mongoose
@@ -26,8 +27,14 @@ app.get('/api/blogs', async (request, response) => {
 
 app.post('/api/blogs', async (request, response) => {
   const blog = new Blog(request.body);
-  const result = await blog.save();
-  response.status(201).json(result);
+  try {
+    const result = await blog.save();
+    response.status(201).json(result);
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return response.status(400).json({ error: error.message });
+    }
+  }
 });
 
 module.exports = app;
