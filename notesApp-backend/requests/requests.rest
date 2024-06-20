@@ -32,3 +32,22 @@ Content-Type: application/json
    "password": "abcdef",
    "notes": []
 }
+
+### Login attempt
+POST http://localhost:3001/api/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+   "username": "vovka",
+   "password": "abcdef"
+}
+
+### POST note when logged in
+POST http://localhost:3001/api/notes/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZvdmthIiwiaWQiOiI2NjczYjdiZjZiYmY4M2EwZGZiODFhMWQiLCJpYXQiOjE3MTg4NzY1MTh9.qKdBzdghX2dtjOUUH72E9S7G-UkoeM1l_KIioRiRmPk
+
+{
+   "content": "JWT stands for JSON Web Token... Who would have thought!",
+   "important": "false"
+}
