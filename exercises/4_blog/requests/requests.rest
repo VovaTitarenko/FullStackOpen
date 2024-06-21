@@ -1,6 +1,9 @@
 GET http://localhost:3003/api/blogs/
 
 ###
+GET http://localhost:3003/api/blogs/6674c5fc770bddfe26aa0f63
+
+###
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 Content-Type: application/json
 
@@ -15,12 +18,49 @@ Content-Type: application/json
 DELETE http://localhost:3003/api/blogs/665d6ecdb4441c58b161fe40
 
 ###
-PUT http://localhost:3003/api/blogs/665d6ecdb4441c58b161fe40 HTTP/1.1
+PUT http://localhost:3003/api/blogs/665d7374ef504e936ca77762 HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZvdmthIiwiaWQiOiI2Njc0MWRhZDJmNzExYWFkNzRkYmJiNjciLCJpYXQiOjE3MTg5Mjg4NDksImV4cCI6MTcxODk1MDQ0OX0.vLgY_CtKUSON1vpen1fR2tnO_FEv_hDwqVTHpejiFDg
+
+{
+   "title":"Declarative vs imperative programming",
+   "author":"uidotdev",
+   "url":"vk.com",
+   "likes":110
+}
+
+### Signup
+POST http://localhost:3003/api/users/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "title": "The story of React",
-   "author": "uidotdev",
-   "url": "https://youtu.be/Wm_xI7KntDs?si=R3tIjDPQixzwZuwx",
-   "likes": 120
+   "username": "vovka",
+   "name": "Vova",
+   "password": "abcdef"
 }
+
+### Login
+POST http://localhost:3003/api/login/ HTTP/1.1
+Content-Type: application/json
+
+{
+   "username": "vovka",
+   "password": "abcdef"
+}
+
+
+### POST blog when logged in
+POST http://localhost:3003/api/blogs/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZvdmthIiwiaWQiOiI2Njc0MWRhZDJmNzExYWFkNzRkYmJiNjciLCJpYXQiOjE3MTg5Mjg4NDksImV4cCI6MTcxODk1MDQ0OX0.vLgY_CtKUSON1vpen1fR2tnO_FEv_hDwqVTHpejiFDg
+
+{
+    "title": "My quest for safety",
+   "author": "Vova Tita",
+   "url": "https://dedoo.ru",
+   "likes": 1001
+}
+
+###
+DELETE  http://localhost:3003/api/blogs/6674c5fc770bddfe26aa0f63
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZvdmthIiwiaWQiOiI2Njc0MWRhZDJmNzExYWFkNzRkYmJiNjciLCJpYXQiOjE3MTg5Mjg4NDksImV4cCI6MTcxODk1MDQ0OX0.vLgY_CtKUSON1vpen1fR2tnO_FEv_hDwqVTHpejiFDg

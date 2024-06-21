@@ -4,12 +4,14 @@ const initialBlogList = [
     author: 'uidotdev',
     url: 'https://youtu.be/Wm_xI7KntDs?si=R3tIjDPQixzwZuwx',
     likes: 20,
+    user: '6674e4f7f20728ae2c620d49',
   },
   {
     title: 'The story of NextJS',
     author: 'uidotdev',
     url: 'https://youtu.be/BILxV_vrZO0?si=qqruENFgNWtnhCp3',
     likes: 30,
+    user: '6674e4f7f20728ae2c620d49',
   },
 ];
 
