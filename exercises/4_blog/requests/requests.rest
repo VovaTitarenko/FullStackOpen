@@ -52,13 +52,12 @@ Content-Type: application/json
 ### POST blog when logged in
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZvdmthIiwiaWQiOiI2Njc0MWRhZDJmNzExYWFkNzRkYmJiNjciLCJpYXQiOjE3MTg5Mjg4NDksImV4cCI6MTcxODk1MDQ0OX0.vLgY_CtKUSON1vpen1fR2tnO_FEv_hDwqVTHpejiFDg
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZvdmthIiwiaWQiOiI2Njc0MWRhZDJmNzExYWFkNzRkYmJiNjciLCJpYXQiOjE3MTkyNDQxODQsImV4cCI6MTcxOTI2NTc4NH0.5Q3h9MCKinVSy0O16vnHO42mxu3-ylZuhjgDOLfirmA
 
 {
     "title": "My quest for safety",
    "author": "Vova Tita",
-   "url": "https://dedoo.ru",
-   "likes": 1001
+   "url": "https://dedoo.ru"
 }
 
 ###
