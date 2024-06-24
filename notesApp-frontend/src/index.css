@@ -86,3 +86,7 @@ button:focus-visible {
   padding: 10px;
   margin-bottom: 10px;
 }
+
+.delete {
+  background-color: lightpink;
+}

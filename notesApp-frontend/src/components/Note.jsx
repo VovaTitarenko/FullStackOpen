@@ -1,19 +1,22 @@
-function Note({ note, toggleImportance }) {
+function Note({ note, toggleImportance, deleteNote }) {
   const label = note.important ? 'make not important' : 'make important';
   return (
-    <>
+    <li>
       {note.important ? (
-        <li>
+        <>
           <b style={{ backgroundColor: 'yellow' }}>{note.content}</b>
           <button onClick={toggleImportance}>{label}</button>
-        </li>
+        </>
       ) : (
-        <li>
+        <>
           {note.content}
           <button onClick={toggleImportance}>{label}</button>
-        </li>
+        </>
       )}
-    </>
+      <button className="delete" onClick={deleteNote}>
+        delete
+      </button>
+    </li>
   );
 }
 
