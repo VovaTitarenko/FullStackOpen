@@ -1,21 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import noteService from './services/notes';
-import loginService from './services/login';
 import Note from './components/Note';
 import Notification from './components/Notification';
 import Footer from './components/Footer';
 import LoginForm from './components/LoginForm';
 import NoteForm from './components/NoteForm';
+import Togglable from './components/Togglable';
+import Stopwatch from './components/Stopwatch';
 
 const App = () => {
   const [notesArr, setNotesArr] = useState([]);
-  const [newNote, setNewNote] = useState('');
   const [showAll, setShowAll] = useState(true);
+  const [loginVisible, setLoginVisible] = useState(false);
+  const [user, setUser] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
     // console.log("effect");
@@ -33,6 +32,8 @@ const App = () => {
     }
   }, []);
 
+  const noteFormRef = useRef(null);
+
   console.log('render', notesArr.length, 'notes');
 
   const notesToShow = showAll
@@ -47,57 +48,19 @@ const App = () => {
     }
   }
 
-  function handleUsername(event) {
-    setUsername(event.target.value);
-  }
-
-  function handlePassword(event) {
-    setPassword(event.target.value);
-  }
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
+  const createNote = async (noteObject) => {
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      window.localStorage.setItem('loggedNoteAppUser', JSON.stringify(user));
-      noteService.setToken(user.token);
-      setUser(user);
-      setUsername('');
-      setPassword('');
-      setSuccessMessage(`Welcome, ${user.username}! You're now logged in!`);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      noteFormRef.current.toggleVisibility();
+      const createdNote = await noteService.create(noteObject);
+      console.log(createdNote);
+      setNotesArr(notesArr.concat(createdNote));
     } catch (exception) {
-      setErrorMessage('Wrong credentials');
+      setErrorMessage(`Validation error in createNote(). ${exception.message}`);
       setTimeout(() => {
         setErrorMessage(null);
       }, 5000);
     }
   };
-
-  function handleTyping(event) {
-    // console.log(event.target.value);
-    setNewNote(event.target.value);
-  }
-
-  function addNote(event) {
-    event.preventDefault();
-    // console.log("button clicked", event.target);
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-    };
-
-    noteService.create(noteObject).then((createdNote) => {
-      console.log(createdNote);
-      setNotesArr(notesArr.concat(createdNote));
-      setNewNote('');
-    });
-  }
 
   function deleteNote(id) {
     noteService
@@ -167,20 +130,28 @@ const App = () => {
               Logout
             </button>
           </div>
-          <NoteForm
-            onSubmit={addNote}
-            onChange={handleTyping}
-            value={newNote}
-          />
+          <Togglable buttonLabel="create new note" ref={noteFormRef}>
+            <NoteForm createNote={createNote} />
+          </Togglable>
         </div>
       ) : (
-        <LoginForm
-          login={handleLogin}
-          onUserChange={handleUsername}
-          uValue={username}
-          onPassChange={handlePassword}
-          pValue={password}
-        />
+        <Togglable buttonLabel="login">
+          <LoginForm
+            saveUser={(user) => setUser(user)}
+            notifySuccess={() => {
+              setSuccessMessage(`You're now logged in!`);
+              setTimeout(() => {
+                setSuccessMessage(null);
+              }, 5000);
+            }}
+            notifyError={() => {
+              setErrorMessage('Wrong credentials');
+              setTimeout(() => {
+                setErrorMessage(null);
+              }, 5000);
+            }}
+          />
+        </Togglable>
       )}
       <label>
         <input
@@ -215,6 +186,7 @@ const App = () => {
           />
         ))}
       </ul>
+      <Stopwatch />
       <Footer />
     </div>
   );
