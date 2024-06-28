@@ -1,19 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import Notification from './components/Notification';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import BlogForm from './components/BlogForm';
+import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
-  const [url, setUrl] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
@@ -29,61 +25,38 @@ const App = () => {
     }
   }, []);
 
-  function handleUsername(event) {
-    setUsername(event.target.value);
-  }
+  const blogFormRef = useRef(null);
 
-  function handlePassword(event) {
-    setPassword(event.target.value);
-  }
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-    try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername('');
-      setPassword('');
-      setSuccessMessage(`Welcome, ${user.username}! You're now logged in!`);
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
-    } catch (exception) {
-      setErrorMessage('Wrong credentials');
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
-    }
+  const createBlog = async (blogObject) => {
+    const createdBlog = await blogService.create(blogObject);
+    console.log(createdBlog);
+    blogFormRef.current.toggleVisibility();
+    setBlogs(blogs.concat(createdBlog));
   };
 
-  const addBlog = async (event) => {
-    event.preventDefault();
-    const newBlog = {
-      title,
-      author,
-      url,
-    };
-    try {
-      const createdBlog = await blogService.create(newBlog);
-      console.log(createdBlog);
-      setBlogs(blogs.concat(createdBlog));
-      setTitle('');
-      setAuthor('');
-      setUrl('');
-      setSuccessMessage('Blog posted successfully!');
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
-    } catch (err) {
-      setErrorMessage(`Error occurred while posting blog: ${err.message}`);
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+  const likeBlog = async (blog) => {
+    const likedBlog = { ...blog, likes: blog.likes + 1 };
+    await blogService.update(blog.id, likedBlog);
+    console.log(`Likes for "${blog.title}" updated successfully.`);
+    setBlogs(blogs.map((b) => (b.id !== blog.id ? b : likedBlog)));
+  };
+
+  const deleteBlog = async (blog) => {
+    if (
+      window.confirm(
+        `Blog "${blog.title}" by ${blog.author} is about to be deleted. Continue?`,
+      )
+    ) {
+      const response = await blogService.deleteBlog(blog.id);
+      console.log(
+        `Blog "${blog.title}" by ${blog.author} has been successfully deleted:`,
+        response,
+      );
+      setBlogs(blogs.filter((b) => b.id !== blog.id));
+    } else {
+      console.log(
+        `You cancelled deletion of "${blog.title}" by ${blog.author}.`,
+      );
     }
   };
 
@@ -93,26 +66,42 @@ const App = () => {
         <h2>BlogsApp</h2>
         <Notification message={errorMessage} type="error" />
         <Notification message={successMessage} type="success" />
-        <LoginForm
-          login={handleLogin}
-          onUserChange={handleUsername}
-          uValue={username}
-          onPassChange={handlePassword}
-          pValue={password}
-        />
+        <Togglable buttonLabel="login">
+          <LoginForm
+            saveUser={(user) => setUser(user)}
+            notifySuccess={() => {
+              setSuccessMessage(`You're now logged in!`);
+              setTimeout(() => {
+                setSuccessMessage(null);
+              }, 5000);
+            }}
+            notifyError={() => {
+              setErrorMessage('Wrong credentials');
+              setTimeout(() => {
+                setErrorMessage(null);
+              }, 5000);
+            }}
+          />
+        </Togglable>
       </div>
     );
   } else {
     return (
       <div>
-        <h2>BlogsApp</h2>
+        <h2>BlogsApp</h2>{' '}
+        <button
+          onMouseDown={() => {
+            console.log(user);
+          }}
+        >
+          log user info
+        </button>
         <Notification message={errorMessage} type="error" />
         <Notification message={successMessage} type="success" />
-
         <div>
           <div>
             <span>
-              Current user: <b>{user.name}</b>
+              Current user: <b>{user.name}</b> with id: <b>{user.id}</b>
             </span>
             <button
               onMouseDown={() => {
@@ -127,20 +116,37 @@ const App = () => {
               Logout
             </button>
           </div>
-          <BlogForm
-            formAction={addBlog}
-            onTitleChange={setTitle}
-            title={title}
-            onAuthorChange={setAuthor}
-            author={author}
-            onUrlChange={setUrl}
-            url={url}
-          />
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+            <BlogForm
+              createBlog={createBlog}
+              notifySuccess={() => {
+                setSuccessMessage('Blog posted successfully!');
+                setTimeout(() => {
+                  setSuccessMessage(null);
+                }, 5000);
+              }}
+              notifyError={(err) => {
+                setErrorMessage(
+                  `Error occurred while posting blog: ${err.message}`,
+                );
+                setTimeout(() => {
+                  setErrorMessage(null);
+                }, 5000);
+              }}
+            />
+          </Togglable>
         </div>
-
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+        {blogs
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              likeBlog={likeBlog}
+              userId={user.id}
+              deleteBlog={deleteBlog}
+            />
+          ))}
       </div>
     );
   }

@@ -1,22 +1,38 @@
-export default function Login({
-  login,
-  onUserChange,
-  uValue,
-  onPassChange,
-  pValue,
-}) {
+import { useState } from 'react';
+import loginService from '../services/login';
+import blogService from '../services/blogs';
+
+export default function Login({ saveUser, notifySuccess, notifyError }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const user = await loginService.login({ username, password });
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user));
+      blogService.setToken(user.token);
+      saveUser(user);
+      setUsername('');
+      setPassword('');
+      notifySuccess();
+    } catch (exception) {
+      notifyError();
+    }
+  };
+
   return (
-    <form onSubmit={(event) => login(event)}>
+    <form onSubmit={(event) => handleLogin(event)}>
       <h2>Login</h2>
       <div className="">
         <label>
           username:{' '}
           <input
-            onChange={(event) => onUserChange(event)}
+            onChange={(event) => setUsername(event.target.value)}
             type="text"
             name="username"
             placeholder="Enter your username"
-            value={uValue}
+            value={username}
           />
         </label>
       </div>
@@ -24,11 +40,11 @@ export default function Login({
         <label>
           password:{' '}
           <input
-            onChange={(event) => onPassChange(event)}
-            type="text"
+            onChange={(event) => setPassword(event.target.value)}
+            type="password"
             name="password"
             placeholder="Enter your password"
-            value={pValue}
+            value={password}
           />
         </label>
       </div>

@@ -1,20 +1,36 @@
-export default function BlogForm({
-  formAction,
-  onTitleChange,
-  title,
-  onAuthorChange,
-  author,
-  onUrlChange,
-  url,
-}) {
+import { useState } from 'react';
+
+export default function BlogForm({ createBlog, notifySuccess, notifyError }) {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [url, setUrl] = useState('');
+
+  const addBlog = async (event) => {
+    event.preventDefault();
+    const newBlog = {
+      title,
+      author,
+      url,
+    };
+    try {
+      await createBlog(newBlog);
+      setTitle('');
+      setAuthor('');
+      setUrl('');
+      notifySuccess();
+    } catch (exception) {
+      notifyError(exception);
+    }
+  };
+
   return (
-    <form onSubmit={(event) => formAction(event)}>
+    <form onSubmit={(event) => addBlog(event)}>
       <div>
         <label>
           Title:
           <input
             type="text"
-            onChange={(event) => onTitleChange(event.target.value)}
+            onChange={(event) => setTitle(event.target.value)}
             value={title}
           />
         </label>
@@ -24,7 +40,7 @@ export default function BlogForm({
           Author:
           <input
             type="text"
-            onChange={(event) => onAuthorChange(event.target.value)}
+            onChange={(event) => setAuthor(event.target.value)}
             value={author}
           />
         </label>
@@ -34,7 +50,7 @@ export default function BlogForm({
           URL:
           <input
             type="text"
-            onChange={(event) => onUrlChange(event.target.value)}
+            onChange={(event) => setUrl(event.target.value)}
             value={url}
           />
         </label>
