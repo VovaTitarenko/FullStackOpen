@@ -101,7 +101,7 @@ const App = () => {
         <div>
           <div>
             <span>
-              Current user: <b>{user.name}</b> with id: <b>{user.id}</b>
+              Current user: <b>{user.name}</b> (id: <b>{user.id}</b>)
             </span>
             <button
               onMouseDown={() => {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import loginService from '../services/login';
 import blogService from '../services/blogs';
 
@@ -52,3 +53,7 @@ export default function Login({ saveUser, notifySuccess, notifyError }) {
     </form>
   );
 }
+
+Login.propTypes = {
+  saveUser: PropTypes.func.required,
+};

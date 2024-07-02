@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 const NoRefTogglable = (props, refs) => {
   const [visible, setVisible] = useState(false);
@@ -21,6 +22,10 @@ const NoRefTogglable = (props, refs) => {
       </div>
     </div>
   );
+};
+
+NoRefTogglable.propTypes = {
+  buttonLabel: PropTypes.string.isRequired,
 };
 
 export default NoRefTogglable;
