@@ -1,7 +1,7 @@
 function Note({ note, toggleImportance, deleteNote }) {
   const label = note.important ? 'make not important' : 'make important';
   return (
-    <li>
+    <li className="note">
       {note.important ? (
         <>
           <b style={{ backgroundColor: 'yellow' }}>{note.content}</b>

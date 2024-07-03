@@ -4,6 +4,7 @@ module.exports = {
     es2021: true,
     node: true,
     browser: true,
+    'vitest-globals/env': true,
   },
   overrides: [
     {
@@ -23,7 +24,7 @@ module.exports = {
     },
     sourceType: 'module',
   },
-  plugins: ['prettier', 'import', 'react', 'jsx-a11y'],
+  plugins: ['prettier', 'import', 'react', 'jsx-a11y', 'vitest-globals'],
   extends: ['eslint:recommended'],
   rules: {
     'prettier/prettier': 'warn',
