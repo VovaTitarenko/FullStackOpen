@@ -20,14 +20,14 @@ const Blog = ({ blog, likeBlog, userId, deleteBlog }) => (
       </button>
     )}
     <NoRefTogglable buttonLabel="show details">
-      <p>
+      <p className="url">
         Link: <i>{blog.url}</i>
       </p>
-      <p>
+      <p className="likes">
         Likes: <b>{blog.likes}</b>{' '}
         <button onMouseDown={() => likeBlog(blog)}>Like</button>
       </p>
-      <p>
+      <p className="userId">
         UserId: <i>{blog.user}</i>
       </p>
       <p>

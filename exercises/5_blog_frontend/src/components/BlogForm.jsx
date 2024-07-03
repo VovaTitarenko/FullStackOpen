@@ -32,6 +32,7 @@ export default function BlogForm({ createBlog, notifySuccess, notifyError }) {
             type="text"
             onChange={(event) => setTitle(event.target.value)}
             value={title}
+            placeholder="Enter blog title"
           />
         </label>
       </div>
@@ -42,6 +43,7 @@ export default function BlogForm({ createBlog, notifySuccess, notifyError }) {
             type="text"
             onChange={(event) => setAuthor(event.target.value)}
             value={author}
+            placeholder="Enter blog author"
           />
         </label>
       </div>
@@ -52,6 +54,7 @@ export default function BlogForm({ createBlog, notifySuccess, notifyError }) {
             type="text"
             onChange={(event) => setUrl(event.target.value)}
             value={url}
+            placeholder="Attach a link"
           />
         </label>
       </div>
