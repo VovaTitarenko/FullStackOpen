@@ -28,6 +28,7 @@ export default function Login({ saveUser, notifySuccess, notifyError }) {
         <label>
           username:{' '}
           <input
+            data-testid="username"
             onChange={({ target }) => setUsername(target.value)}
             type="text"
             name="username"
@@ -40,6 +41,7 @@ export default function Login({ saveUser, notifySuccess, notifyError }) {
         <label>
           password:{' '}
           <input
+            data-testid="password"
             onChange={({ target }) => setPassword(target.value)}
             type="password"
             name="password"
