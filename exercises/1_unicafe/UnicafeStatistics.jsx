@@ -1,5 +1,5 @@
-import StatisticLine from "./UnicafeStatisticLine";
-import Calculation from "./UnicafeCalculation";
+import StatisticLine from './UnicafeStatisticLine';
+import Calculation from './UnicafeCalculation';
 
 function Statistics(props) {
   if (props.reviewArr.length !== 0) {

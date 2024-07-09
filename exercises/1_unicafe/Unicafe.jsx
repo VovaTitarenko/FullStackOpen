@@ -1,15 +1,21 @@
-import { useState } from "react";
-import Button from "../src/components/Button.jsx";
-import StatisticLine from "./UnicafeStatisticLine.jsx";
-import Calculation from "./UnicafeCalculation.jsx";
-import Statistics from "./UnicafeStatistics.jsx";
+import { useState, useEffect } from 'react';
+import { createStore } from 'redux';
+import Button from './Button.jsx';
+import StatisticLine from './UnicafeStatisticLine.jsx';
+import Calculation from './UnicafeCalculation.jsx';
+import Statistics from './UnicafeStatistics.jsx';
+import reviewReducer from './reducers/reviewReducer.js';
+
+// Redux store
+const store = createStore(reviewReducer);
 
 const App = () => {
-  const [goodCounter, setGoodCounter] = useState(0);
-  const [neutralCounter, setNeutralCounter] = useState(0);
-  const [badCounter, setBadCounter] = useState(0);
-  const [buttonText, setButtonText] = useState(["good", "neutral", "bad"]);
   const [reviewArr, setReviewArr] = useState([]);
+  const buttonText = ['good', 'neutral', 'bad'];
+
+  useEffect(() => {
+    setReviewArr([]);
+  }, []);
 
   function renewReviewArr(score) {
     setReviewArr(reviewArr.concat(score));
@@ -21,41 +27,32 @@ const App = () => {
 
   function countPositivePercentage(arr) {
     return Math.round(
-      (arr.filter((item) => item === 1).length / arr.length) * 100
+      (arr.filter((item) => item === 1).length / arr.length) * 100,
     );
   }
 
   function handleGood() {
-    setGoodCounter(goodCounter + 1);
+    store.dispatch({ type: 'GOOD_REVIEW' });
     renewReviewArr(1);
   }
 
   function handleNeutral() {
-    setNeutralCounter(neutralCounter + 1);
+    store.dispatch({ type: 'OK_REVIEW' });
     renewReviewArr(0);
   }
 
   function handleBad() {
-    setBadCounter(badCounter + 1);
+    store.dispatch({ type: 'BAD_REVIEW' });
     renewReviewArr(-1);
   }
 
   function reset() {
-    setGoodCounter(0);
-    setNeutralCounter(0);
-    setBadCounter(0);
+    store.dispatch({ type: 'RESET' });
     setReviewArr([]);
   }
 
   return (
     <div>
-      {/* <iframe
-        width="800"
-        height="640"
-        src="https://dud.newplayjj.com:9443/?token_movie=287099d12b04c805cf487ad50ea3ae&amp;token=668c7265d69fd4cc0afdf5454326bb"
-        frameborder="0"
-        allowfullscreen=""
-      ></iframe> */}
       <h1>Give feedback!</h1>
       <Button onClick={handleGood} text={buttonText[0]} />
       <Button onClick={handleNeutral} text={buttonText[1]} />
@@ -64,8 +61,12 @@ const App = () => {
       <h1>Statistics:</h1>
 
       <Statistics
-        scores={["good", "neutral", "bad"]}
-        counters={[goodCounter, neutralCounter, badCounter]}
+        scores={buttonText}
+        counters={[
+          store.getState().good,
+          store.getState().ok,
+          store.getState().bad,
+        ]}
         funcs={[findAverage, countPositivePercentage]}
         reviewArr={reviewArr}
       />
