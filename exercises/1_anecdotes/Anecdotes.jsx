@@ -3,6 +3,7 @@ import AnecdoteForm from './AnecdoteForm.jsx';
 import AnecdoteList from './AnecdoteList.jsx';
 import Filter from './Filter.jsx';
 import { filterAnecdotesBy } from './reducers/filterReducer.js';
+import Notification from './Notification.jsx';
 
 const App = () => {
   let anecdoteStore = useSelector((state) => state);
@@ -22,6 +23,7 @@ const App = () => {
   return (
     <div>
       <h2>Anecdotes</h2>
+      {anecdoteStore.notification && <Notification />}
       <AnecdoteForm />
       <Filter
         value={anecdoteStore.filter}

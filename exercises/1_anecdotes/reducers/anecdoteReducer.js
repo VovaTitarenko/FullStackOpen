@@ -1,3 +1,5 @@
+import { createSlice } from '@reduxjs/toolkit';
+
 const initialState = [
   {
     id: 1,
@@ -47,41 +49,65 @@ const initialState = [
   },
 ];
 
-const anecdoteReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'NEW_ANECDOTE':
-      return state.concat(action.payload);
-    case 'UPVOTE':
-      return state.map((anec) =>
-        anec.id !== action.payload.id
-          ? anec
-          : { ...action.payload, votes: action.payload.votes + 1 },
-      );
-    case 'RESET':
-      return initialState;
-    default:
-      return state;
-  }
-};
+const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
-export const createAnecdote = (content) => {
-  const generateId = () => Number((Math.random() * 1000000).toFixed(0));
-
-  return {
-    type: 'NEW_ANECDOTE',
-    payload: {
-      id: generateId(),
-      content,
-      votes: 0,
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    createAnecdote(state, action) {
+      const content = action.payload;
+      return state.concat({
+        id: generateId(),
+        content,
+        votes: 0,
+      });
     },
-  };
-};
+    upvoteAnecdote(state, action) {
+      const id = action.payload;
+      const anecToUpvote = state.find((an) => an.id === id);
+      const upvotedAnec = { ...anecToUpvote, votes: anecToUpvote.votes + 1 };
+      return state.map((an) => (an.id !== id ? an : upvotedAnec));
+    },
+  },
+});
 
-export const upvoteAnecdote = (object) => {
-  return {
-    type: 'UPVOTE',
-    payload: object,
-  };
-};
+// const anecdoteReducer = (state = initialState, action) => {
+//   switch (action.type) {
+//     case 'NEW_ANECDOTE':
+//       return state.concat(action.payload);
+//     case 'UPVOTE':
+//       return state.map((anec) =>
+//         anec.id !== action.payload.id
+//           ? anec
+//           : { ...action.payload, votes: action.payload.votes + 1 },
+//       );
+//     case 'RESET':
+//       return initialState;
+//     default:
+//       return state;
+//   }
+// };
 
-export default anecdoteReducer;
+// export const createAnecdote = (content) => {
+//   return {
+//     type: 'NEW_ANECDOTE',
+//     payload: {
+//       id: generateId(),
+//       content,
+//       votes: 0,
+//     },
+//   };
+// };
+
+// export const upvoteAnecdote = (object) => {
+//   return {
+//     type: 'UPVOTE',
+//     payload: object,
+//   };
+// };
+
+// export default anecdoteReducer;
+
+export const { createAnecdote, upvoteAnecdote } = anecdoteSlice.actions;
+export default anecdoteSlice.reducer;

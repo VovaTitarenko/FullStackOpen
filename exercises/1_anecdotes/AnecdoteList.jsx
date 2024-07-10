@@ -1,12 +1,20 @@
 import { useDispatch } from 'react-redux';
 import { upvoteAnecdote } from './reducers/anecdoteReducer.js';
 import Anec from './AnecdotesComponent';
+import {
+  hideNotification,
+  showNotification,
+} from './reducers/notificationReducer.js';
 
 const AnecdoteList = ({ anecdotes }) => {
   const dispatch = useDispatch();
 
-  const upvote = (anecdote) => {
-    dispatch(upvoteAnecdote(anecdote));
+  const upvote = (anecId) => {
+    dispatch(upvoteAnecdote(anecId));
+    dispatch(showNotification(`You upvoted anecdote #${anecId}!`));
+    setTimeout(() => {
+      dispatch(hideNotification());
+    }, 3000);
   };
 
   return (

@@ -6,7 +6,7 @@ function Anec({ anecdote, upvote }) {
       <div>{anecdote.content}</div>
       <div style={{ color: 'gray' }}>
         has {anecdote.votes} votes
-        <Button onClick={() => upvote(anecdote)} text="upvote" />
+        <Button onClick={() => upvote(anecdote.id)} text="upvote" />
       </div>
     </>
   );
