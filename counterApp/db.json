@@ -7,22 +7,37 @@
     },
     {
       "content": "state changes are made with actions",
-      "important": false,
+      "important": true,
       "id": "2"
     },
     {
-      "id": "9d0f",
-      "content": "My name is...",
+      "id": "9d19",
+      "content": "React-Query invalidation is working!",
+      "important": true
+    },
+    {
+      "id": "08aa",
+      "content": "hehehhe",
       "important": false
     },
     {
-      "id": "203f",
-      "content": "My name is... Eminem!",
+      "id": "a162",
+      "content": "hehehehe",
       "important": false
     },
     {
-      "id": "2b14",
-      "content": "My family is great!",
+      "id": "e832",
+      "content": "hahahaha",
+      "important": false
+    },
+    {
+      "id": "2781",
+      "content": "HUi pizda, da?",
+      "important": false
+    },
+    {
+      "id": "4b97",
+      "content": "Hooray!",
       "important": false
     }
   ]
