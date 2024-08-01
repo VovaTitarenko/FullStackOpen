@@ -1,0 +1,31 @@
+POST http://localhost:3002/api/diaries/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "date": "09-08-1988",
+    "weather": "rainy",
+    "visibility": "ok",
+    "comment": "poluchshe"
+}
+###
+POST http://localhost:3002/api/diaries/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "date": "11-08-1988",
+    "weather": "rainy",
+    "visibility": "zaebis",
+    "comment": "vse norm"
+}
+###
+POST http://localhost:3002/api/diaries/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "date": "11-08-1988",
+    "weather": "pizdec",
+    "visibility": "huyevaya",
+    "comment": "a ne, vse norm"
+}
+###
+GET http://localhost:3002/api/diaries/ HTTP/1.1
