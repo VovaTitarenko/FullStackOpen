@@ -5,7 +5,7 @@ const RadioField = (props: {
   setState: (arg: string) => void;
 }) => {
   return (
-    <div>
+    <div data-testid={props.category}>
       <label>
         {props.category
           .split("")
@@ -17,6 +17,7 @@ const RadioField = (props: {
           <span key={value}>
             <input
               type="radio"
+              data-testid={value}
               checked={props.state === value}
               name={props.category}
               id={value}

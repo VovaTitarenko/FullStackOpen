@@ -12,7 +12,7 @@ const ErrorNotification = ({ text }: { text: string }) => {
         paddingRight: 10,
       }}
     >
-      <b>{text}</b>
+      <b data-testid="errmessage">{text}</b>
     </div>
   );
 };

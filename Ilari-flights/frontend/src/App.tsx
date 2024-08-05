@@ -72,6 +72,7 @@ function App() {
         <div>
           <label>Date: </label>
           <input
+            data-testid="date"
             type="date"
             value={date}
             onChange={({ target }) => {
@@ -94,6 +95,7 @@ function App() {
         <div>
           <label>Comment: </label>
           <input
+            data-testid="comment"
             value={comment}
             onChange={({ target }) => {
               setComment(target.value);
