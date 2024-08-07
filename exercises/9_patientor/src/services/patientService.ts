@@ -1,9 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
 import patients from "../../data/patients";
-import { Patient, PatientFormValues } from "../types";
+import { NonSensitivePatient, Patient, PatientFormValues } from "../types";
 
-const getPatients = (): Omit<Patient, "ssn">[] => {
-  return patients.map(({ id, name, occupation, gender, dateOfBirth }) => ({
+const patientData: Patient[] = patients;
+
+const getPatients = (): NonSensitivePatient[] => {
+  return patientData.map(({ id, name, occupation, gender, dateOfBirth }) => ({
     id,
     name,
     occupation,
@@ -12,11 +14,16 @@ const getPatients = (): Omit<Patient, "ssn">[] => {
   }));
 };
 
-const addPatient = (patient: PatientFormValues): Omit<Patient, "ssn"> => {
-  const newPatient: Patient = { ...patient, id: uuidv4() };
+const getPatientById = (patientId: string): Patient => {
+  const requestedPatient = patientData.filter((p) => p.id === patientId)[0];
+  return requestedPatient;
+};
+
+const addPatient = (patient: PatientFormValues): NonSensitivePatient => {
+  const newPatient: Patient = { ...patient, id: uuidv4(), entries: [] };
   patients.push(newPatient);
   console.log(`i added a patient ${newPatient}`);
-  const securePatientEntry: Omit<Patient, "ssn"> = {
+  const securePatientEntry: NonSensitivePatient = {
     id: newPatient.id,
     name: newPatient.name,
     occupation: newPatient.occupation,
@@ -26,4 +33,4 @@ const addPatient = (patient: PatientFormValues): Omit<Patient, "ssn"> => {
   return securePatientEntry;
 };
 
-export default { getPatients, addPatient };
+export default { getPatients, getPatientById, addPatient };

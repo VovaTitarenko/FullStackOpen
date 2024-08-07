@@ -1,7 +1,7 @@
 import express from "express";
 import patientService from "../services/patientService";
 import diagnosisService from "../services/diagnosisService";
-import { Patient, PatientFormValues } from "../types";
+import { NonSensitivePatient, PatientFormValues } from "../types";
 import toNewPatient from "../utils";
 
 const app = express.Router();
@@ -10,10 +10,15 @@ app.get("/patients", (_req, res) => {
   res.send(patientService.getPatients());
 });
 
+app.get("/patients/:id", (_req, res) => {
+  const id = _req.params.id;
+  res.send(patientService.getPatientById(id));
+});
+
 app.post("/patients", (_req, res) => {
   try {
     const content: PatientFormValues = toNewPatient(_req.body);
-    const addedPatient: Omit<Patient, "ssn"> =
+    const addedPatient: NonSensitivePatient =
       patientService.addPatient(content);
     res.json(addedPatient);
   } catch (error: unknown) {
