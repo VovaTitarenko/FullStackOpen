@@ -1,4 +1,5 @@
-import { Gender, PatientFormValues } from "./types";
+import { Entry, EntryWithoutId, Gender, HealthCheckRating, PatientFormValues } from "./types";
+import { string, z } from "zod";
 
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -54,13 +55,7 @@ const toNewPatient = (object: unknown): PatientFormValues => {
     throw new Error("Incorrect or missing data");
   }
 
-  if (
-    "name" in object &&
-    "occupation" in object &&
-    "gender" in object &&
-    "dateOfBirth" in object &&
-    "ssn" in object
-  ) {
+  if ("name" in object && "occupation" in object && "gender" in object && "dateOfBirth" in object && "ssn" in object) {
     const newEntry: PatientFormValues = {
       dateOfBirth: parseDateOfBirth(object.dateOfBirth),
       name: parseName(object.name),
@@ -74,4 +69,87 @@ const toNewPatient = (object: unknown): PatientFormValues => {
   throw new Error("Incorrect data: some fields are missing");
 };
 
-export default toNewPatient;
+const EntryBase = z.object({
+  id: z.string().min(4),
+  date: z.string().date(),
+  description: z.string().trim().min(4),
+  specialist: z.string().trim().min(4),
+});
+
+const EntrySchema = z.discriminatedUnion("type", [
+  EntryBase.extend({
+    type: z.literal("Hospital"),
+    diagnosisCodes: z.string().array(),
+    discharge: z
+      .object({
+        date: z.string().date(),
+        criteria: z.string().trim().min(4),
+      })
+      .optional(),
+    admission: z
+      .object({
+        date: z.string().date(),
+        criteria: z.string().trim().min(4),
+      })
+      .optional(),
+  }),
+  EntryBase.extend({
+    type: z.literal("OccupationalHealthcare"),
+    employerName: string(),
+    diagnosisCodes: z.string().array().optional(),
+    sickLeave: z
+      .object({
+        startDate: z.string().date(),
+        endDate: z.string().date(),
+      })
+      .optional(),
+  }),
+  EntryBase.extend({
+    type: z.literal("HealthCheck"),
+    healthCheckRating: z.nativeEnum(HealthCheckRating),
+  }),
+]);
+
+const NewEntrySchema = z.discriminatedUnion("type", [
+  EntryBase.omit({ id: true }).extend({
+    type: z.literal("Hospital"),
+    diagnosisCodes: z.string().array(),
+    discharge: z
+      .object({
+        date: z.string().date(),
+        criteria: z.string().trim().min(4),
+      })
+      .optional(),
+    admission: z
+      .object({
+        date: z.string().date(),
+        criteria: z.string().trim().min(4),
+      })
+      .optional(),
+  }),
+  EntryBase.omit({ id: true }).extend({
+    type: z.literal("OccupationalHealthcare"),
+    employerName: string(),
+    diagnosisCodes: z.string().array().optional(),
+    sickLeave: z
+      .object({
+        startDate: z.string().date(),
+        endDate: z.string().date(),
+      })
+      .optional(),
+  }),
+  EntryBase.omit({ id: true }).extend({
+    type: z.literal("HealthCheck"),
+    healthCheckRating: z.nativeEnum(HealthCheckRating),
+  }),
+]);
+
+const toNewEntry = (object: unknown): EntryWithoutId => {
+  return NewEntrySchema.parse(object);
+};
+
+const parseEntry = (object: unknown): Entry => {
+  return EntrySchema.parse(object);
+};
+
+export default { toNewPatient, toNewEntry, parseEntry };
